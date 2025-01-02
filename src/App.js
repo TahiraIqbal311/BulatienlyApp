@@ -6,7 +6,7 @@ class App extends React.Component{
     return(
       <>
       <NavigationBar/>
-      <News/>
+      <News newsSize={6}/>
 
     
       </>

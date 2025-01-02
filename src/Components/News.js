@@ -3,17 +3,15 @@ import NewsItem from './NewsIist';
 class News extends React.Component{
    handelNextBtn=async()=>{
     console.log("Next");
-    if(this.state.page+1>Math.ceil(this.state.totalResults/20))
+    if(this.state.page+1>Math.ceil(this.state.totalResults/this.props.newsSize))
       {
-       
-        this.state.nextBtnState=false;
-        alert("You already read all headlines",this.state.nextBtnState);
+       return;
       }
     else
       {
 
     
-            let url=`https://newsapi.org/v2/top-headlines?country=us&apiKey=1baf86ffcfc1430c9e23965760636360&page=${this.state.page+1}&pagesize=20`;
+            let url=`https://newsapi.org/v2/top-headlines?country=us&apiKey=1baf86ffcfc1430c9e23965760636360&page=${this.state.page+1}&pagesize=${this.props.newsSize}`;
             let data= await fetch(url);
             let parsedData= await data.json();
             this.setState({
@@ -23,9 +21,11 @@ class News extends React.Component{
             console.log(parsedData);
       }
   }
+
+
   handelPrevBtn=async()=>{
     console.log("Previous");
-    let url=`https://newsapi.org/v2/top-headlines?country=us&apiKey=1baf86ffcfc1430c9e23965760636360&page=${this.state.page-1}&pagesize=20`;
+    let url=`https://newsapi.org/v2/top-headlines?country=us&apiKey=1baf86ffcfc1430c9e23965760636360&page=${this.state.page-1}&pagesize=${this.props.newsSize}`;
     let data= await fetch(url);
     let parsedData= await data.json();
     this.setState({
@@ -34,20 +34,23 @@ class News extends React.Component{
     
     console.log(parsedData);
   }
+
+
   constructor(){
     super();
     console.log("Im constructor from News.js");
     this.state={
-      articles: [],
-     loading: false ,// i will use it to show a spiner when news loads 
+    articles: [],
+    loading: false ,// i will use it to show a spiner when news loads 
      page:1
     }
   }
  async componentDidMount(){
-    let url="https://newsapi.org/v2/top-headlines?country=us&apiKey=1baf86ffcfc1430c9e23965760636360&page=1&pagesize=20";
+    let url=`https://newsapi.org/v2/top-headlines?country=us&apiKey=1baf86ffcfc1430c9e23965760636360&page=1&pagesize=${this.props.newsSize}`;
     let data= await fetch(url);
     let parsedData= await data.json();
-    this.setState({articles:parsedData.articles,totalResults:parsedData.totalResults});
+    this.setState({articles:parsedData.articles,
+      totalResults:parsedData.totalResults});
     console.log(parsedData);
   }
   
@@ -69,7 +72,7 @@ class News extends React.Component{
             <div className="container d-flex justify-content-between">
             <button type="button" disabled={this.state.page<=1} className="btn btn-success" onClick={this.handelPrevBtn}>&larr;Previous</button>
 
-            <button type="button" disabled={this.state.page+1>Math.ceil(this.state.totalResults/20)}   className="btn btn-success"onClick={this.handelNextBtn}>Next&rarr;</button>
+            <button type="button" disabled={this.state.page+1>Math.ceil(this.state.totalResults/this.props.newsSize)} className="btn btn-success"onClick={this.handelNextBtn}>Next&rarr;</button>
             </div>
      </div>  
     
